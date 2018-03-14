@@ -4,12 +4,24 @@ import android.util.Log;
 
 import com.udacity.sandwichclub.model.Sandwich;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.List;
+
 public class JsonUtils {
 
     public static Sandwich parseSandwichJson(String json) {
         Sandwich sandwich;
 
-        Log.i(LogCat.TAG, "TEST: " + json);
+        try {
+            JSONObject jsonObject   = new JSONObject(json);
+            sandwich = new Sandwich(jsonObject);
+            Log.i(LogCat.TAG, "TEST: " + jsonObject);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
 
         return null;
     }
