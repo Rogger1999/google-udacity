@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
@@ -14,6 +15,7 @@ public class DetailActivity extends AppCompatActivity {
 
     public static final String EXTRA_POSITION = "extra_position";
     private static final int DEFAULT_POSITION = -1;
+    Sandwich sandwich;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -21,6 +23,7 @@ public class DetailActivity extends AppCompatActivity {
         setContentView(R.layout.activity_detail);
 
         ImageView ingredientsIv = findViewById(R.id.image_iv);
+
 
         Intent intent = getIntent();
         if (intent == null) {
@@ -36,7 +39,7 @@ public class DetailActivity extends AppCompatActivity {
 
         String[] sandwiches = getResources().getStringArray(R.array.sandwich_details);
         String json = sandwiches[position];
-        Sandwich sandwich = JsonUtils.parseSandwichJson(json);
+        sandwich = JsonUtils.parseSandwichJson(json);
         if (sandwich == null) {
             // Sandwich data unavailable
             closeOnError();
@@ -57,6 +60,21 @@ public class DetailActivity extends AppCompatActivity {
     }
 
     private void populateUI() {
+        TextView alsoKnowTV = findViewById(R.id.also_know_tv);
+        TextView placeOriginTV = findViewById(R.id.origin_tv);
+        TextView descriptionTV = findViewById(R.id.description_tv);
+        TextView incredientsTV = findViewById(R.id.ingredients_tv);
 
+
+        alsoKnowTV.setText(sandwich.getAlsoKnownAs().toString()
+                .replace("[","")
+                .replace("]", "")
+                .replace(",", ",  "));
+        placeOriginTV.setText(sandwich.getPlaceOfOrigin().toString());
+        descriptionTV.setText(sandwich.getDescription().toString());
+        incredientsTV.setText(sandwich.getIngredients().toString()
+                .replace("]","")
+                .replace("[", "")
+                .replace(",", ",  "));
     }
 }

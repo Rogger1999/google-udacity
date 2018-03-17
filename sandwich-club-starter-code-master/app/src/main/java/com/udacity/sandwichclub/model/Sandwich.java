@@ -1,5 +1,7 @@
 package com.udacity.sandwichclub.model;
 
+import org.json.JSONArray;
+
 import java.util.List;
 
 public class Sandwich {
@@ -11,9 +13,6 @@ public class Sandwich {
     private String image;
     private List<String> ingredients = null;
 
-    /**
-     * No args constructor for use in serialization
-     */
     public Sandwich() {
     }
 
