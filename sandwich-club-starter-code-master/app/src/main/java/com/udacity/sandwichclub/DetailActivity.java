@@ -11,19 +11,29 @@ import com.squareup.picasso.Picasso;
 import com.udacity.sandwichclub.model.Sandwich;
 import com.udacity.sandwichclub.utils.JsonUtils;
 
+import java.util.ArrayList;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 public class DetailActivity extends AppCompatActivity {
 
     public static final String EXTRA_POSITION = "extra_position";
     private static final int DEFAULT_POSITION = -1;
     Sandwich sandwich;
 
+    @BindView(R.id.image_iv) ImageView ingredientsIv;
+    @BindView(R.id.also_know_tv) TextView alsoKnowTV;
+    @BindView(R.id.origin_tv) TextView placeOriginTV;
+    @BindView(R.id.description_tv) TextView descriptionTV;
+    @BindView(R.id.ingredients_tv) TextView incredientsTV;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail);
 
-        ImageView ingredientsIv = findViewById(R.id.image_iv);
-
+        ButterKnife.bind(this);
 
         Intent intent = getIntent();
         if (intent == null) {
@@ -60,12 +70,6 @@ public class DetailActivity extends AppCompatActivity {
     }
 
     private void populateUI() {
-        TextView alsoKnowTV = findViewById(R.id.also_know_tv);
-        TextView placeOriginTV = findViewById(R.id.origin_tv);
-        TextView descriptionTV = findViewById(R.id.description_tv);
-        TextView incredientsTV = findViewById(R.id.ingredients_tv);
-
-
         alsoKnowTV.setText(sandwich.getAlsoKnownAs().toString()
                 .replace("[","")
                 .replace("]", "")

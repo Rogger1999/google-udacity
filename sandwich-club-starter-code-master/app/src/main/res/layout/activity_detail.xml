@@ -9,92 +9,89 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-    </ScrollView>
-
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <ImageView
-            android:id="@+id/image_iv"
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="200dp"
-            android:adjustViewBounds="true"
-            android:contentDescription="@string/sandwich_picture_content_description"
-            android:scaleType="centerCrop" />
+            android:layout_height="wrap_content">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/image_iv"
-            android:text="@string/detail_also_known_as_label"
-            android:textStyle="bold"
-            android:id="@+id/detail_also_known_label"
-            android:layout_marginTop="20dp"/>
+            <ImageView
+                android:id="@+id/image_iv"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:adjustViewBounds="true"
+                android:contentDescription="@string/sandwich_picture_content_description"
+                android:scaleType="centerCrop" />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/detail_ingredients_label"
-            android:layout_alignBaseline="@+id/ingredients_tv"
-            android:textStyle="bold"
-            android:id="@+id/ingredients_label"
-            android:layout_marginTop="20dp"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/image_iv"
+                android:text="@string/detail_also_known_as_label"
+                android:textStyle="bold"
+                android:id="@+id/detail_also_known_label"
+                android:layout_marginTop="20dp"/>
 
-        <TextView
-            android:id="@+id/place_of_origin_label"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/detail_also_known_label"
-            android:text="@string/detail_place_of_origin_label"
-            android:textStyle="bold"
-            android:layout_marginTop="20dp"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/detail_ingredients_label"
+                android:layout_alignBaseline="@+id/ingredients_tv"
+                android:textStyle="bold"
+                android:id="@+id/ingredients_label"
+                android:layout_marginTop="20dp"/>
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/place_of_origin_label"
-            android:text="@string/detail_description_label"
-            android:id="@+id/description_label"
-            android:textStyle="bold"
-            android:layout_marginTop="20dp"/>
+            <TextView
+                android:id="@+id/place_of_origin_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/detail_also_known_label"
+                android:text="@string/detail_place_of_origin_label"
+                android:textStyle="bold"
+                android:layout_marginTop="20dp"/>
 
-        <TextView
-            android:id="@+id/ingredients_tv"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/description_tv"
-            android:layout_alignLeft="@+id/description_tv"
-            android:layout_marginTop="20dp"
-            android:text=""
-            tools:text="zxcc" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/place_of_origin_label"
+                android:text="@string/detail_description_label"
+                android:id="@+id/description_label"
+                android:textStyle="bold"
+                android:layout_marginTop="20dp"/>
 
-        <TextView
-            android:id="@+id/description_tv"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignBaseline="@+id/description_label"
-            android:layout_alignBottom="@+id/description_label"
-            android:layout_toEndOf="@+id/place_of_origin_label"
-            android:layout_toRightOf="@+id/place_of_origin_label" />
+            <TextView
+                android:id="@+id/ingredients_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/description_tv"
+                android:layout_alignLeft="@+id/description_tv"
+                android:layout_marginTop="20dp" />
 
-        <TextView
-            android:id="@+id/origin_tv"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignBaseline="@+id/place_of_origin_label"
-            android:layout_alignBottom="@+id/place_of_origin_label"
-            android:layout_alignLeft="@+id/also_know_tv"
-            android:layout_alignStart="@+id/also_know_tv" />
+            <TextView
+                android:id="@+id/description_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBaseline="@+id/description_label"
+                android:layout_alignBottom="@+id/description_label"
+                android:layout_toEndOf="@+id/place_of_origin_label"
+                android:layout_toRightOf="@+id/place_of_origin_label" />
 
-        <TextView
-            android:id="@+id/also_know_tv"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignTop="@+id/detail_also_known_label"
-            android:layout_marginLeft="14dp"
-            android:layout_marginStart="14dp"
-            android:layout_toEndOf="@+id/detail_also_known_label"
-            android:layout_toRightOf="@+id/detail_also_known_label" />
-    </RelativeLayout>
+            <TextView
+                android:id="@+id/origin_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBaseline="@+id/place_of_origin_label"
+                android:layout_alignBottom="@+id/place_of_origin_label"
+                android:layout_alignLeft="@+id/also_know_tv"
+                android:layout_alignStart="@+id/also_know_tv" />
+
+            <TextView
+                android:id="@+id/also_know_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignTop="@+id/detail_also_known_label"
+                android:layout_marginLeft="14dp"
+                android:layout_marginStart="14dp"
+                android:layout_toEndOf="@+id/detail_also_known_label"
+                android:layout_toRightOf="@+id/detail_also_known_label" />
+        </RelativeLayout>
+    </ScrollView>
 </FrameLayout>
