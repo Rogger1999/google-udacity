@@ -7,6 +7,7 @@ import android.util.Log;
 
 import com.example.michal.popularmovie1.R;
 import com.example.michal.popularmovie1.Utils.Constants;
+import com.example.michal.popularmovie1.Utils.JsonUtils;
 import com.squareup.picasso.Downloader;
 
 import java.io.BufferedReader;
@@ -47,17 +48,17 @@ public class MainActivity extends AppCompatActivity {
                 url = urls[0];
                 urlConnection = (HttpURLConnection) url.openConnection();
                 InputStream stream = urlConnection.getInputStream();
-                InputStreamReader reader = new InputStreamReader(stream);
-                long data = reader.read();
-                Log.i(Constants.TAG, String.valueOf(data));
+                BufferedReader bufferedReader = new BufferedReader(new
+                        InputStreamReader(stream));
+                StringBuilder builder = new StringBuilder();
 
-                while(data != -1 ) {
-                    char current = (char) data;
-                    result = result + current;
-                    data = reader.read();
+                String inputString;
+                while ((inputString = bufferedReader.readLine()) != null) {
+                    builder.append(inputString);
                 }
 
-                Log.i(Constants.TAG, result);
+                Log.i(Constants.TAG, String.valueOf(builder.length()));
+                JsonUtils jsonUtils = new JsonUtils(builder);
 
             } catch (Exception e) {
                 Log.e(Constants.TAG, e.toString());
