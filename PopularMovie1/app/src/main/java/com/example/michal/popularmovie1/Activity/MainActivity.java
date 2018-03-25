@@ -7,17 +7,14 @@ import android.util.Log;
 
 import com.example.michal.popularmovie1.R;
 import com.example.michal.popularmovie1.Utils.Constants;
-import com.example.michal.popularmovie1.Utils.JsonUtils;
-import com.squareup.picasso.Downloader;
 
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
-import java.net.ProtocolException;
 import java.net.URL;
+import java.util.concurrent.ExecutionException;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -33,13 +30,20 @@ public class MainActivity extends AppCompatActivity {
             e.printStackTrace();
         }
 
-        new DownloadMovie().execute(temp_url);
+        try {
+            StringBuilder sb = new DownloadMovie().execute(temp_url).get();
+            Log.i(Constants.TAG, sb.toString());
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        }
     }
 
-    private class DownloadMovie extends AsyncTask<URL, Integer, Long> {
+    private class DownloadMovie extends AsyncTask<URL, Integer, StringBuilder> {
 
         @Override
-        protected Long doInBackground(URL... urls) {
+        protected StringBuilder doInBackground(URL... urls) {
             String result = "";
             URL url = null;
             HttpURLConnection urlConnection = null;
@@ -48,8 +52,7 @@ public class MainActivity extends AppCompatActivity {
                 url = urls[0];
                 urlConnection = (HttpURLConnection) url.openConnection();
                 InputStream stream = urlConnection.getInputStream();
-                BufferedReader bufferedReader = new BufferedReader(new
-                        InputStreamReader(stream));
+                BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(stream));
                 StringBuilder builder = new StringBuilder();
 
                 String inputString;
@@ -58,7 +61,7 @@ public class MainActivity extends AppCompatActivity {
                 }
 
                 Log.i(Constants.TAG, String.valueOf(builder.length()));
-                JsonUtils jsonUtils = new JsonUtils(builder);
+                return builder;
 
             } catch (Exception e) {
                 Log.e(Constants.TAG, e.toString());
