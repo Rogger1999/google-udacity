@@ -6,6 +6,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.Map;
+
 /**
  * Created by michal on 3/25/18.
  */
@@ -13,11 +15,24 @@ import org.json.JSONObject;
 public class JsonUtils {
     JSONObject jsonObject;
 
-    public JsonUtils(StringBuilder builder) throws JSONException {
-        this.jsonObject = new JSONObject(builder.toString());
-        JSONArray jsonArray = new JSONArray(jsonObject.optString("results"));
-        for(int i = 0; i < jsonArray.length(); i++)
-            Log.i(Constants.TAG, String.valueOf(jsonArray.get(i)) + "\n----------\n");
+    public JsonUtils(StringBuilder builder) {
+        try {
+            this.jsonObject = new JSONObject(builder.toString());
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
 
+    public JSONArray getJsonArray() {
+        JSONArray jsonArray = null;
+
+        try {
+            jsonArray = new JSONArray(jsonObject.optString("results"));
+            return jsonArray;
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        return null;
     }
 }

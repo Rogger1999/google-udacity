@@ -4,9 +4,20 @@ import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.GridView;
+import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.example.michal.popularmovie1.R;
 import com.example.michal.popularmovie1.Utils.Constants;
+import com.example.michal.popularmovie1.Utils.ImageAdapter;
+import com.example.michal.popularmovie1.Utils.JsonUtils;
+import com.squareup.picasso.Picasso;
+
+import org.json.JSONArray;
+import org.json.JSONException;
 
 import java.io.BufferedReader;
 import java.io.InputStream;
@@ -32,12 +43,28 @@ public class MainActivity extends AppCompatActivity {
 
         try {
             StringBuilder sb = new DownloadMovie().execute(temp_url).get();
-            Log.i(Constants.TAG, sb.toString());
+            JsonUtils jsonUtils = new JsonUtils(sb);
+            JSONArray info = jsonUtils.getJsonArray();
+
+            for(int i = 0; i < info.length(); i++) {
+                Log.i(Constants.TAG, info.getJSONObject(i).optString("vote_count"));
+                Log.i(Constants.TAG, info.getJSONObject(i).optString("poster_path"));
+            }
+
+
+            String s = "http://image.tmdb.org/t/p/w185" + info.getJSONObject(1).optString("poster_path");
+
+            GridView gridview = (GridView) findViewById(R.id.gridview);
+            gridview.setAdapter(new ImageAdapter(this));
+
         } catch (InterruptedException e) {
             e.printStackTrace();
         } catch (ExecutionException e) {
             e.printStackTrace();
+        } catch (JSONException e) {
+            e.printStackTrace();
         }
+
     }
 
     private class DownloadMovie extends AsyncTask<URL, Integer, StringBuilder> {
@@ -60,7 +87,6 @@ public class MainActivity extends AppCompatActivity {
                     builder.append(inputString);
                 }
 
-                Log.i(Constants.TAG, String.valueOf(builder.length()));
                 return builder;
 
             } catch (Exception e) {
