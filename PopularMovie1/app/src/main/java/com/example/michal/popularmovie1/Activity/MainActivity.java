@@ -1,5 +1,6 @@
 package com.example.michal.popularmovie1.Activity;
 
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -18,6 +19,7 @@ import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
 import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.InputStream;
@@ -25,6 +27,7 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.concurrent.ExecutionException;
 
 public class MainActivity extends AppCompatActivity {
@@ -44,18 +47,32 @@ public class MainActivity extends AppCompatActivity {
         try {
             StringBuilder sb = new DownloadMovie().execute(temp_url).get();
             JsonUtils jsonUtils = new JsonUtils(sb);
-            JSONArray info = jsonUtils.getJsonArray();
+            final JSONArray info = jsonUtils.getJsonArray();
+
+            ArrayList<String> arrayList = new ArrayList<>();
 
             for(int i = 0; i < info.length(); i++) {
-                Log.i(Constants.TAG, info.getJSONObject(i).optString("vote_count"));
-                Log.i(Constants.TAG, info.getJSONObject(i).optString("poster_path"));
+                arrayList.add(info.getJSONObject(i).optString("poster_path"));
             }
 
 
-            String s = "http://image.tmdb.org/t/p/w185" + info.getJSONObject(1).optString("poster_path");
+            //String s = "http://image.tmdb.org/t/p/w185" + info.getJSONObject(1).optString("poster_path");
 
             GridView gridview = (GridView) findViewById(R.id.gridview);
-            gridview.setAdapter(new ImageAdapter(this));
+            gridview.setAdapter(new ImageAdapter(this, arrayList));
+
+            gridview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
+                    Toast.makeText(MainActivity.this, "Test" + position, Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent(getBaseContext(), DetailActivity.class);
+                    try {
+                        intent.putExtra("Test", info.getJSONObject(position).toString());
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                    startActivity(intent);
+                }
+            });
 
         } catch (InterruptedException e) {
             e.printStackTrace();
