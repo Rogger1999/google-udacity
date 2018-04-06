@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/menu"
+        android:checkable="false"
+        android:enabled="true"
+        android:title="Item"
+        android:visible="true" />
+    <item
+        android:title="Test"
+        android:visible="true" />
+</menu>

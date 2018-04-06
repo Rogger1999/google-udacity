@@ -5,21 +5,20 @@ import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.GridView;
-import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.example.michal.popularmovie1.R;
 import com.example.michal.popularmovie1.Utils.Constants;
 import com.example.michal.popularmovie1.Utils.ImageAdapter;
 import com.example.michal.popularmovie1.Utils.JsonUtils;
-import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
 import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.InputStream;
@@ -32,34 +31,38 @@ import java.util.concurrent.ExecutionException;
 
 public class MainActivity extends AppCompatActivity {
 
+    private static final String POSTER_PATH = "poster_path";
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.options_menu, menu);
+        return true;
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        URL temp_url = null;
-        try {
-            temp_url = new URL(Constants.URL + Constants.MOVIE_POPULAR + Constants.API_KEY);
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-        }
+        URL temp_url = getURL(Constants.MOVIE_POPULAR);
+        getPictures(temp_url);
+    }
 
+    private void getPictures(URL temp_url) {
         try {
-            StringBuilder sb = new DownloadMovie().execute(temp_url).get();
-            JsonUtils jsonUtils = new JsonUtils(sb);
-            final JSONArray info = jsonUtils.getJsonArray();
+            StringBuilder allData = new DownloadMovie().execute(temp_url).get();
+            JsonUtils jsonUtils = new JsonUtils(allData);
+            final JSONArray info = jsonUtils.getJsonArrayResults();
 
-            ArrayList<String> arrayList = new ArrayList<>();
+            ArrayList<String> picturesList = new ArrayList<>();
 
             for(int i = 0; i < info.length(); i++) {
-                arrayList.add(info.getJSONObject(i).optString("poster_path"));
+                picturesList.add(info.getJSONObject(i).optString(POSTER_PATH));
             }
 
-
-            //String s = "http://image.tmdb.org/t/p/w185" + info.getJSONObject(1).optString("poster_path");
-
-            GridView gridview = (GridView) findViewById(R.id.gridview);
-            gridview.setAdapter(new ImageAdapter(this, arrayList));
+            GridView gridview = findViewById(R.id.gridview);
+            gridview.setAdapter(new ImageAdapter(this, picturesList));
 
             gridview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
@@ -84,6 +87,15 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    private URL getURL(String type) {
+        try {
+            return new URL(Constants.URL + type + Constants.API_KEY);
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
     private class DownloadMovie extends AsyncTask<URL, Integer, StringBuilder> {
 
         @Override
@@ -95,21 +107,20 @@ public class MainActivity extends AppCompatActivity {
             try {
                 url = urls[0];
                 urlConnection = (HttpURLConnection) url.openConnection();
-                InputStream stream = urlConnection.getInputStream();
-                BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(stream));
-                StringBuilder builder = new StringBuilder();
+                InputStream inputStream = urlConnection.getInputStream();
+                BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
+                StringBuilder stringBuilder = new StringBuilder();
 
                 String inputString;
                 while ((inputString = bufferedReader.readLine()) != null) {
-                    builder.append(inputString);
+                    stringBuilder.append(inputString);
                 }
 
-                return builder;
+                return stringBuilder;
 
             } catch (Exception e) {
                 Log.e(Constants.TAG, e.toString());
             }
-
 
             return null;
         }

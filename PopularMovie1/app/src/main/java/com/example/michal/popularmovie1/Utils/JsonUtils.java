@@ -13,6 +13,7 @@ import java.util.Map;
  */
 
 public class JsonUtils {
+    private static final String RESULTS = "results";
     JSONObject jsonObject;
 
     public JsonUtils(StringBuilder builder) {
@@ -23,11 +24,11 @@ public class JsonUtils {
         }
     }
 
-    public JSONArray getJsonArray() {
+    public JSONArray getJsonArrayResults() {
         JSONArray jsonArray = null;
 
         try {
-            jsonArray = new JSONArray(jsonObject.optString("results"));
+            jsonArray = new JSONArray(jsonObject.optString(RESULTS));
             return jsonArray;
         } catch (JSONException e) {
             e.printStackTrace();
