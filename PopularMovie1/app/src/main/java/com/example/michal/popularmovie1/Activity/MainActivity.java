@@ -7,10 +7,10 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.GridView;
-import android.widget.Toast;
 
 import com.example.michal.popularmovie1.R;
 import com.example.michal.popularmovie1.Utils.Constants;
@@ -31,7 +31,7 @@ import java.util.concurrent.ExecutionException;
 
 public class MainActivity extends AppCompatActivity {
 
-    private static final String POSTER_PATH = "poster_path";
+    private boolean popularChoosen = true;
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -41,12 +41,32 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.popular_menu:
+                if (popularChoosen == false) {
+                    getPictures(getURL(Constants.MOVIE_POPULAR));
+                    popularChoosen = true;
+                }
+                return true;
+            case R.id.rated_menu:
+                if (popularChoosen == true) {
+                    getPictures(getURL(Constants.MOVIE_RATED));
+                    popularChoosen = false;
+                }
+                return true;
+
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        URL temp_url = getURL(Constants.MOVIE_POPULAR);
-        getPictures(temp_url);
+        getPictures(getURL(Constants.MOVIE_POPULAR));
     }
 
     private void getPictures(URL temp_url) {
@@ -58,7 +78,7 @@ public class MainActivity extends AppCompatActivity {
             ArrayList<String> picturesList = new ArrayList<>();
 
             for(int i = 0; i < info.length(); i++) {
-                picturesList.add(info.getJSONObject(i).optString(POSTER_PATH));
+                picturesList.add(info.getJSONObject(i).optString(Constants.POSTER_PATH));
             }
 
             GridView gridview = findViewById(R.id.gridview);
@@ -66,10 +86,9 @@ public class MainActivity extends AppCompatActivity {
 
             gridview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
-                    Toast.makeText(MainActivity.this, "Test" + position, Toast.LENGTH_SHORT).show();
                     Intent intent = new Intent(getBaseContext(), DetailActivity.class);
                     try {
-                        intent.putExtra("Test", info.getJSONObject(position).toString());
+                        intent.putExtra(Constants.VIDEO_DETAILS, info.getJSONObject(position).toString());
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
