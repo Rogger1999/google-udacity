@@ -8,7 +8,7 @@ public class Constants {
     public static final String TAG = "Movie";
 
     public static final String URL = "http://api.themoviedb.org/3";
-    public static final String API_KEY = "/?api_key=YOU_API_KEY";
+    public static final String API_KEY = "/?api_key=FILL_YOUR_APP_KEY";
 
     public static final String MOVIE_POPULAR = "/movie/popular";
     public static final String MOVIE_RATED = "/movie/top_rated";
@@ -22,6 +22,4 @@ public class Constants {
     public static final String VOTE_AVARAGE = "vote_average";
     public static final String RELEASE_DATE = "release_date";
     public static final String POSTER_PATH = "poster_path";
-
-    public static final String NO_CONNECTION = "No internet connection";
 }
