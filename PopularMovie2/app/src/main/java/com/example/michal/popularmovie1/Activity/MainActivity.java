@@ -1,10 +1,6 @@
 package com.example.michal.popularmovie1.Activity;
 
-import android.app.Dialog;
-import android.content.Context;
 import android.content.Intent;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -15,12 +11,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.GridView;
-import android.widget.ProgressBar;
-import android.widget.Spinner;
-import android.widget.Toast;
 
 import com.example.michal.popularmovie1.R;
-import com.example.michal.popularmovie1.Utils.CheckNetwork;
 import com.example.michal.popularmovie1.Utils.Constants;
 import com.example.michal.popularmovie1.Utils.ImageAdapter;
 import com.example.michal.popularmovie1.Utils.JsonUtils;
@@ -40,10 +32,6 @@ import java.util.concurrent.ExecutionException;
 public class MainActivity extends AppCompatActivity {
 
     private boolean popularChoosen = true;
-    private StringBuilder allData;
-    private GridView gridview;
-    private ArrayList<String> picturesList;
-    private CheckNetwork checkNetwork;
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -57,24 +45,14 @@ public class MainActivity extends AppCompatActivity {
         switch (item.getItemId()) {
             case R.id.popular_menu:
                 if (popularChoosen == false) {
-                    if(checkNetwork.getStatus(this)) {
-                        new DownloadMovie().execute(getURL(Constants.MOVIE_POPULAR));
-                        popularChoosen = true;
-                    }
-                    else {
-                        Toast.makeText(this, Constants.NO_CONNECTION, Toast.LENGTH_LONG).show();
-                    }
+                    getPictures(getURL(Constants.MOVIE_POPULAR));
+                    popularChoosen = true;
                 }
                 return true;
             case R.id.rated_menu:
                 if (popularChoosen == true) {
-                    if(checkNetwork.getStatus(this)) {
-                        new DownloadMovie().execute(getURL(Constants.MOVIE_RATED));
-                        popularChoosen = false;
-                    }
-                    else {
-                        Toast.makeText(this, Constants.NO_CONNECTION, Toast.LENGTH_LONG).show();
-                    }
+                    getPictures(getURL(Constants.MOVIE_RATED));
+                    popularChoosen = false;
                 }
                 return true;
 
@@ -88,28 +66,22 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        checkNetwork = new CheckNetwork();
-
-        gridview = findViewById(R.id.gridview);
-
-        if(checkNetwork.getStatus(this))
-            new DownloadMovie().execute(getURL(Constants.MOVIE_POPULAR));
-        else {
-            Toast.makeText(this, Constants.NO_CONNECTION, Toast.LENGTH_LONG).show();
-        }
+        getPictures(getURL(Constants.MOVIE_POPULAR));
     }
 
-    private void getPictures(StringBuilder stringBuilder) {
+    private void getPictures(URL temp_url) {
         try {
-            JsonUtils jsonUtils = new JsonUtils(stringBuilder);
+            StringBuilder allData = new DownloadMovie().execute(temp_url).get();
+            JsonUtils jsonUtils = new JsonUtils(allData);
             final JSONArray info = jsonUtils.getJsonArrayResults();
 
-            picturesList = new ArrayList<>();
+            ArrayList<String> picturesList = new ArrayList<>();
 
             for(int i = 0; i < info.length(); i++) {
                 picturesList.add(info.getJSONObject(i).optString(Constants.POSTER_PATH));
             }
 
+            GridView gridview = findViewById(R.id.gridview);
             gridview.setAdapter(new ImageAdapter(this, picturesList));
 
             gridview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -124,9 +96,14 @@ public class MainActivity extends AppCompatActivity {
                 }
             });
 
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
         } catch (JSONException e) {
             e.printStackTrace();
         }
+
     }
 
     private URL getURL(String type) {
@@ -163,13 +140,8 @@ public class MainActivity extends AppCompatActivity {
             } catch (Exception e) {
                 Log.e(Constants.TAG, e.toString());
             }
+
             return null;
         }
-
-        @Override
-        protected void onPostExecute(StringBuilder stringBuilder) {
-            getPictures(stringBuilder);
-        }
-
     }
 }
