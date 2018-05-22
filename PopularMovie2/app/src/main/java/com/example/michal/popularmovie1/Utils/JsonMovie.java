@@ -7,7 +7,7 @@ import org.json.JSONObject;
  */
 
 public class JsonMovie {
-    private JSONObject movieJson;
+    private final JSONObject movieJson;
 
     public JsonMovie(JSONObject jsonObject) {
         movieJson = jsonObject;
@@ -32,4 +32,6 @@ public class JsonMovie {
     public String getReleaseDate() {
         return movieJson.optString(Constants.RELEASE_DATE);
     }
+
+    public String getVideoID() {return movieJson.optString(Constants.VIDEO_ID); }
 }

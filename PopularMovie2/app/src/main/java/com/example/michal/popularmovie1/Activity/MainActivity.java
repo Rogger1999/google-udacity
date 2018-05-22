@@ -1,7 +1,9 @@
 package com.example.michal.popularmovie1.Activity;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
+import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -11,8 +13,10 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.GridView;
+import android.widget.Toast;
 
 import com.example.michal.popularmovie1.R;
+import com.example.michal.popularmovie1.Utils.CheckNetwork;
 import com.example.michal.popularmovie1.Utils.Constants;
 import com.example.michal.popularmovie1.Utils.ImageAdapter;
 import com.example.michal.popularmovie1.Utils.JsonUtils;
@@ -27,12 +31,16 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.concurrent.ExecutionException;
 
 public class MainActivity extends AppCompatActivity {
 
-    private boolean popularChoosen = true;
 
+    private StringBuilder allData;
+    private GridView gridview;
+    private ArrayList<String> picturesList;
+    private CheckNetwork checkNetwork;
+
+    private String spNotFound = "SharedPreferences not found";
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
@@ -44,17 +52,39 @@ public class MainActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.popular_menu:
-                if (popularChoosen == false) {
-                    getPictures(getURL(Constants.MOVIE_POPULAR));
-                    popularChoosen = true;
+                if (!(Constants.popularChoosen == 1)) {
+                    if(checkNetwork.getStatus(this)) {
+                        new DownloadMovie().execute(getURL(Constants.MOVIE_POPULAR));
+                        Constants.popularChoosen = 1;
+                    }
+                    else {
+                        Toast.makeText(this, Constants.NO_CONNECTION, Toast.LENGTH_LONG).show();
+                    }
                 }
                 return true;
             case R.id.rated_menu:
-                if (popularChoosen == true) {
-                    getPictures(getURL(Constants.MOVIE_RATED));
-                    popularChoosen = false;
+                if (!(Constants.popularChoosen == 2)) {
+                    if(checkNetwork.getStatus(this)) {
+                        new DownloadMovie().execute(getURL(Constants.MOVIE_RATED));
+                        Constants.popularChoosen = 2;
+                    }
+                    else {
+                        Toast.makeText(this, Constants.NO_CONNECTION, Toast.LENGTH_LONG).show();
+                    }
                 }
                 return true;
+            case R.id.favorite_menu:
+                if (!(Constants.popularChoosen == 3)) {
+                    if(checkNetwork.getStatus(this)) {
+                        getPictures(Constants.favoriteMovies);
+                        Constants.popularChoosen = 3;
+                    }
+                    else {
+                        Toast.makeText(this, Constants.NO_CONNECTION, Toast.LENGTH_LONG).show();
+                    }
+                }
+                return true;
+
 
             default:
                 return super.onOptionsItemSelected(item);
@@ -66,22 +96,49 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        getPictures(getURL(Constants.MOVIE_POPULAR));
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
+        Constants.favoriteMovies = new JSONArray(new ArrayList<String>());
+
+        if(preferences.getString(Constants.APP_NAME, null) != null) {
+            try {
+                Constants.favoriteMovies = new JSONArray(preferences.getString(Constants.APP_NAME, null));
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            Log.i(Constants.TAG, Constants.favoriteMovies.toString());
+        }
+
+        checkNetwork = new CheckNetwork();
+        gridview = findViewById(R.id.gridview);
+
+        if(checkNetwork.getStatus(this))
+            switch (Constants.popularChoosen) {
+                case 1:
+                    new DownloadMovie().execute(getURL(Constants.MOVIE_POPULAR));
+                    return;
+                case 2:
+                    new DownloadMovie().execute(getURL(Constants.MOVIE_RATED));
+                    return;
+                case 3:
+                    getPictures(Constants.favoriteMovies);
+                    return;
+                default:
+                    new DownloadMovie().execute(getURL(Constants.MOVIE_POPULAR));
+            }
+
+        else {
+            Toast.makeText(this, Constants.NO_CONNECTION, Toast.LENGTH_LONG).show();
+        }
     }
 
-    private void getPictures(URL temp_url) {
+    private void getPictures(final JSONArray info) {
         try {
-            StringBuilder allData = new DownloadMovie().execute(temp_url).get();
-            JsonUtils jsonUtils = new JsonUtils(allData);
-            final JSONArray info = jsonUtils.getJsonArrayResults();
-
-            ArrayList<String> picturesList = new ArrayList<>();
+            picturesList = new ArrayList<>();
 
             for(int i = 0; i < info.length(); i++) {
                 picturesList.add(info.getJSONObject(i).optString(Constants.POSTER_PATH));
             }
 
-            GridView gridview = findViewById(R.id.gridview);
             gridview.setAdapter(new ImageAdapter(this, picturesList));
 
             gridview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -96,14 +153,9 @@ public class MainActivity extends AppCompatActivity {
                 }
             });
 
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (ExecutionException e) {
-            e.printStackTrace();
         } catch (JSONException e) {
             e.printStackTrace();
         }
-
     }
 
     private URL getURL(String type) {
@@ -120,8 +172,8 @@ public class MainActivity extends AppCompatActivity {
         @Override
         protected StringBuilder doInBackground(URL... urls) {
             String result = "";
-            URL url = null;
-            HttpURLConnection urlConnection = null;
+            URL url;
+            HttpURLConnection urlConnection;
 
             try {
                 url = urls[0];
@@ -140,8 +192,15 @@ public class MainActivity extends AppCompatActivity {
             } catch (Exception e) {
                 Log.e(Constants.TAG, e.toString());
             }
-
             return null;
         }
+
+        @Override
+        protected void onPostExecute(StringBuilder stringBuilder) {
+            JsonUtils jsonUtils = new JsonUtils(stringBuilder);
+            final JSONArray info = jsonUtils.getJsonArrayResults();
+            getPictures(info);
+        }
+
     }
 }

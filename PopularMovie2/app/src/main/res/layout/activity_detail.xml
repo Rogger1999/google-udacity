@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context="com.example.michal.popularmovie1.Activity.DetailActivity">
 
     <ScrollView
@@ -46,6 +47,67 @@
                 android:layout_below="@id/vote_tv"
                 android:layout_toRightOf="@id/details_iv"
                 android:padding="12dp"/>
+
+            <ImageView
+                android:id="@+id/star_iv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="12dp"
+                android:src="@drawable/ic_star_border_black_48dp"
+                android:layout_below="@id/release_tv"
+                android:layout_toRightOf="@id/details_iv"
+                android:onClick="starOnClick"
+                android:tag="0"/>
+
+
+            <TextView
+                android:id="@+id/line"
+                style="?android:attr/listSeparatorTextViewStyle"
+                android:paddingTop="5dip"
+                android:gravity="center_horizontal"
+                android:layout_below="@+id/overview_tv"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="#000" />
+
+
+            <TextView
+                android:id="@+id/trailer_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/overview_tv"
+                android:padding="16dp"
+                android:text="TRAILER" />
+            <TextView
+                android:id="@+id/not_avalaible_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:visibility="visible"
+                android:text="not avalaible"/>
+            <ImageView
+                android:id="@+id/video_iv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/trailer_tv"
+                android:visibility="invisible"
+                android:src="@drawable/ic_play_circle_outline_black_40dp"
+                android:padding="12dp"/>
+            <TextView
+                android:id="@+id/line2"
+                style="?android:attr/listSeparatorTextViewStyle"
+                android:paddingTop="5dip"
+                android:gravity="center_horizontal"
+                android:layout_below="@+id/video_iv"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="#000" />
+            <TextView
+                android:id="@+id/reviews_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/line2"
+                android:padding="12dp"
+                android:text="No Review"/>
         </RelativeLayout>
     </ScrollView>
 </FrameLayout>

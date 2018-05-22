@@ -14,4 +14,9 @@
         android:icon="@android:drawable/checkbox_on_background"
         android:title="Rated Movie"
         android:visible="true" />
+    <item
+        android:id="@+id/favorite_menu"
+        android:icon="@android:drawable/checkbox_on_background"
+        android:title="My Favourite"
+        android:visible="true" />
 </menu>

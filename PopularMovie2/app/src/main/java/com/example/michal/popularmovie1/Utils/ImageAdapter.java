@@ -6,7 +6,6 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 
-import com.example.michal.popularmovie1.R;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -16,8 +15,8 @@ import java.util.ArrayList;
  */
 
 public class ImageAdapter extends BaseAdapter {
-    private Context mContext;
-    private ArrayList<String> arrayList;
+    private final Context mContext;
+    private final ArrayList<String> arrayList;
 
     public ImageAdapter(Context c, ArrayList<String> al) {
         mContext = c;
@@ -47,7 +46,7 @@ public class ImageAdapter extends BaseAdapter {
             imageView = (ImageView) convertView;
         }
 
-        Picasso.with(mContext).load("http://image.tmdb.org/t/p/w342" + arrayList.get(position)).into(imageView);
+        Picasso.with(mContext).load(Constants.IMAGE_PATH + arrayList.get(position)).into(imageView);
         return imageView;
     }
 

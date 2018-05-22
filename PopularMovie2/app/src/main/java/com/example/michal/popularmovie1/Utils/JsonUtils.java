@@ -1,19 +1,15 @@
 package com.example.michal.popularmovie1.Utils;
 
-import android.util.Log;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.util.Map;
 
 /**
  * Created by michal on 3/25/18.
  */
 
 public class JsonUtils {
-    JSONObject jsonObject;
+    private JSONObject jsonObject;
 
     public JsonUtils(StringBuilder builder) {
         try {
@@ -24,7 +20,7 @@ public class JsonUtils {
     }
 
     public JSONArray getJsonArrayResults() {
-        JSONArray jsonArray = null;
+        JSONArray jsonArray;
 
         try {
             jsonArray = new JSONArray(jsonObject.optString(Constants.RESULTS));
