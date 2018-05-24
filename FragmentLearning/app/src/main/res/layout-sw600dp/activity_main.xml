@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:baselineAligned="false"
+    tools:context="com.tiredpapi.baking.fragmetnsex.activity.MainActivity">
+    <fragment
+        android:id="@+id/master_fragment"
+        android:layout_width="400dp"
+        android:layout_height="match_parent"
+        android:name="com.tiredpapi.baking.fragmetnsex.fragments.MasterFragment"/>
+
+    <LinearLayout
+        android:id="@+id/linaer_me"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal">
+        <FrameLayout
+            android:id="@+id/image_container"
+            android:layout_width="match_parent"
+            android:layout_height="180dp">
+        </FrameLayout>
+        <FrameLayout
+            android:id="@+id/image_container1"
+            android:layout_width="match_parent"
+            android:layout_height="180dp">
+        </FrameLayout>
+        <FrameLayout
+            android:id="@+id/image_container2"
+            android:layout_width="match_parent"
+            android:layout_height="180dp"/>
+    </LinearLayout>
+
+
+
+</LinearLayout>
